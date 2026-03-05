@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "crawl": "deno run --allow-net --allow-env crawl.ts",
+    "discover": "deno run --allow-net --allow-env discover.ts",
+    "debug": "deno run --allow-net --allow-env --env-file=.env debug.ts"
+  },
+  "deploy": {
+    "org": "xero",
+    "app": "relay-crawler"
+  }
+}
