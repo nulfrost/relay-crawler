@@ -6,6 +6,7 @@ on:
 env:
   RELAY_ADMIN_PASSWORD: ${{ secrets.RELAY_ADMIN_PASSWORD }}
   RELAY_HOST: ${{ secrets.RELAY_HOST }}
+  DISCORD_WEBHOOK_TOKEN: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
 
 permissions:
   contents: read
