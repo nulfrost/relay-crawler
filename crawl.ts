@@ -55,6 +55,11 @@ for (const host of disconnectedHosts) {
 }
 
 // summary of this run sent to discord webhook
+
+const nextScheduledRun = Temporal.PlainDateTime.from(
+  Temporal.Now.plainDateTimeISO("America/New_York"),
+)
+  .add({ hours: 1 }).toLocaleString();
 const DISCORD_WEBHOOK_TOKEN = Deno.env.get("DISCORD_WEBHOOK_TOKEN");
 const response = await fetch(
   `https://discord.com/api/webhooks/1479298793735196716/${DISCORD_WEBHOOK_TOKEN}`,
@@ -77,6 +82,10 @@ const response = await fetch(
             {
               "name": "failures",
               "value": `${unsuccessfulConnections} PDSes failed to re-crawl`,
+            },
+            {
+              "name": "Next scheduled run",
+              "value": nextScheduledRun,
             },
           ],
         },

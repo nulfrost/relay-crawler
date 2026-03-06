@@ -41,7 +41,6 @@ interface Host {
 // let successfulConnections = 0;
 // let unsuccessfulConnections = 0;
 
-
 // for (const host of disconnectedHosts) {
 //   const response = await fetch(
 //     `${Deno.env.get("RELAY_HOST")}/xrpc/com.atproto.sync.requestCrawl`,
@@ -142,13 +141,18 @@ interface Host {
 //   console.info(`[INFO]: added ${host} to relay`)
 // }
 
+const nextScheduledRun = Temporal.PlainDateTime.from(
+  Temporal.Now.plainDateTimeISO("America/New_York"),
+)
+  .add({ hours: 1 }).toLocaleString();
+
 const DISCORD_WEBHOOK_TOKEN = Deno.env.get("DISCORD_WEBHOOK_TOKEN");
 const response = await fetch(
   `https://discord.com/api/webhooks/1479298793735196716/${DISCORD_WEBHOOK_TOKEN}`,
   {
     method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       embeds: [
@@ -165,6 +169,10 @@ const response = await fetch(
               "name": "failures",
               "value": ` PDSes failed to re-crawl`,
             },
+            {
+              "name": "Next scheduled run",
+              "value": nextScheduledRun,
+            },
           ],
         },
       ],
@@ -172,7 +180,7 @@ const response = await fetch(
   },
 );
 if (!response.ok) {
-  const data = await response.json()
-  console.log({data})
+  const data = await response.json();
+  console.log({ data });
   throw new Error(`failed to send message to webhook: ${response.status}`);
 }
