@@ -60,6 +60,9 @@ const response = await fetch(
   `https://discord.com/api/webhooks/1479298793735196716/${DISCORD_WEBHOOK_TOKEN}`,
   {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       embeds: [
         {
@@ -82,5 +85,7 @@ const response = await fetch(
   },
 );
 if (!response.ok) {
+  const data = await response.json();
+  console.log({ data });
   throw new Error(`failed to send message to webhook: ${response.status}`);
 }
