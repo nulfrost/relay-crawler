@@ -16,3 +16,19 @@ export interface Host {
   PerDayEventRate: { Max: number; Window: number };
   UserCount: number;
 }
+
+export interface DiscordWebhookMessage {
+  embeds: DiscordWebhookEmbeds
+}
+
+interface DiscordWebhookEmbeds {
+  title: string;
+  description?: string;
+  timestamp?: string;
+  fields: DiscordWebhookEmbedFields[];
+}
+
+interface DiscordWebhookEmbedFields {
+  name: string;
+  value?: string;
+}

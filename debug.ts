@@ -1,3 +1,5 @@
+// import { sendWebhookMessage } from "./helpers.ts";
+
 interface Host {
   ID: number;
   CreatedAt: string;
@@ -17,14 +19,7 @@ interface Host {
   UserCount: number;
 }
 
-// const pdsResponse = await fetch(`${Deno.env.get("RELAY_HOST")}/admin/pds/list`, {
-//   headers: {
-//     "Content-Type": "application/json",
-//     Authorization: `Basic ${
-//       btoa("admin:" + Deno.env.get("RELAY_ADMIN_PASSWORD"))
-//     }`,
-//   },
-// });
+// const pdsResponse = await getPdsList();
 
 // if (!pdsResponse.ok) {
 //   throw new Error(
@@ -42,16 +37,7 @@ interface Host {
 // let unsuccessfulConnections = 0;
 
 // for (const host of disconnectedHosts) {
-//   const response = await fetch(
-//     `${Deno.env.get("RELAY_HOST")}/xrpc/com.atproto.sync.requestCrawl`,
-//     {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ hostname: host.Host }),
-//     },
-//   );
+//   const response = await requestCrawl(host.Host);
 
 //   if (!response.ok) {
 //     const data = await response.json();
@@ -141,46 +127,31 @@ interface Host {
 //   console.info(`[INFO]: added ${host} to relay`)
 // }
 
-const nextScheduledRun = Temporal.PlainDateTime.from(
-  Temporal.Now.plainDateTimeISO("America/New_York"),
-)
-  .add({ hours: 1 }).toLocaleString();
+// const nextScheduledRun = Temporal.PlainDateTime.from(
+//   Temporal.Now.plainDateTimeISO("America/New_York"),
+// )
+//   .add({ hours: 1 }).toLocaleString();
 
-const DISCORD_WEBHOOK_TOKEN = Deno.env.get("DISCORD_WEBHOOK_TOKEN");
-const response = await fetch(
-  `https://discord.com/api/webhooks/1479298793735196716/${DISCORD_WEBHOOK_TOKEN}`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      embeds: [
-        {
-          "title": "Relay Re-crawl",
-          "description": "Summary of recrawl github action",
-          "timestamp": new Date().toISOString(),
-          "fields": [
-            {
-              "name": "added",
-              "value": ` PDSes successfully re-crawled`,
-            },
-            {
-              "name": "failures",
-              "value": ` PDSes failed to re-crawl`,
-            },
-            {
-              "name": "Next scheduled run",
-              "value": nextScheduledRun,
-            },
-          ],
-        },
-      ],
-    }),
-  },
-);
-if (!response.ok) {
-  const data = await response.json();
-  console.log({ data });
-  throw new Error(`failed to send message to webhook: ${response.status}`);
-}
+// const response = await sendWebhookMessage({
+//   embeds: [{
+//     "title": "New PDS additions",
+//     "description": "Summary of discovery github action",
+//     timestamp: new Date().toISOString(),
+//     "fields": [
+//       {
+//         "name": "added",
+//         "value": `PDSes successfully added`,
+//       },
+//       {
+//         "name": "failures",
+//         "value": `PDSes did not get added`,
+//       },
+//     ],
+//   }],
+// });
+
+// if (!response.ok) {
+//   const data = await response.json();
+//   console.log({ data });
+//   throw new Error(`failed to send message to webhook: ${response.status}`);
+// }
