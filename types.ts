@@ -17,6 +17,16 @@ export interface Host {
   UserCount: number;
 }
 
+export interface ListHostsResponse {
+  cursor?: string;
+  hosts: {
+    accountCount: number;
+    hostname: string;
+    seq: number;
+    status: "active" | "offline";
+  }[];
+}
+
 export interface DiscordWebhookMessage {
   embeds: DiscordWebhookEmbeds
 }
