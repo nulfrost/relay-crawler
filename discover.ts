@@ -1,5 +1,6 @@
 import { getPdsList, sendWebhookMessage } from "./helpers.ts";
 import type { Host, ListHostsResponse } from "./types.ts";
+import {getDateTimeInFutureHours} from "./future.ts"
 
 const response = await getPdsList();
 
@@ -81,6 +82,8 @@ for (const host of Array.from(newHosts)) {
   console.info(`[INFO]: added ${host} to relay`);
 }
 
+const nextScheduledRun = getDateTimeInFutureHours(24)
+
 const webhookResponse = await sendWebhookMessage({
   embeds: {
     "title": "New PDS additions",
@@ -95,6 +98,10 @@ const webhookResponse = await sendWebhookMessage({
         "name": "failures",
         "value": `${unsuccessfulAdditions} PDSes did not get added`,
       },
+      {
+        name: "Next scheduled run",
+        value: nextScheduledRun
+      }
     ],
   },
 });
