@@ -41,7 +41,7 @@ for (const host of disconnectedHosts) {
 
 const nextScheduledRun = getDateTimeInFutureHours(1);
 const response = await sendWebhookMessage({
-  embeds: {
+  embeds: [{
     "title": "Relay Re-crawl",
     "description": "Summary of recrawl github action",
     timestamp: new Date().toISOString(),
@@ -59,7 +59,7 @@ const response = await sendWebhookMessage({
         "value": nextScheduledRun,
       },
     ],
-  },
+  }],
 });
 
 if (!response.ok) {

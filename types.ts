@@ -28,7 +28,7 @@ export interface ListHostsResponse {
 }
 
 export interface DiscordWebhookMessage {
-  embeds: DiscordWebhookEmbeds
+  embeds: DiscordWebhookEmbeds[]
 }
 
 interface DiscordWebhookEmbeds {

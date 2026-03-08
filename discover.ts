@@ -85,7 +85,7 @@ for (const host of Array.from(newHosts)) {
 const nextScheduledRun = getDateTimeInFutureHours(24)
 
 const webhookResponse = await sendWebhookMessage({
-  embeds: {
+  embeds: [{
     "title": "New PDS additions",
     "description": "Summary of discovery github action",
     timestamp: new Date().toISOString(),
@@ -103,7 +103,7 @@ const webhookResponse = await sendWebhookMessage({
         value: nextScheduledRun
       }
     ],
-  },
+  }]
 });
 
 if (!webhookResponse.ok) {
