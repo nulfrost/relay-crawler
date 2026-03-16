@@ -1,6 +1,11 @@
 import { getPdsList, sendWebhookMessage } from "./helpers.ts";
 import type { Host, ListHostsResponse } from "./types.ts";
-import {getDateTimeInFutureHours} from "./future.ts"
+import { getDateTimeInFutureHours } from "./future.ts";
+import {
+  DISCORD_WEBHOOK_TOKEN,
+  RELAY_HOST,
+  UPSTREAM_RELAY_HOST,
+} from "./constants.ts";
 
 const response = await getPdsList();
 
@@ -15,7 +20,7 @@ const hosts = await response.json() as Host[];
 const currentHosts = new Set(hosts.map((host) => host.Host));
 
 const upstream = await fetch(
-  "https://relay1.us-west.bsky.network/xrpc/com.atproto.sync.listHosts?limit=1000",
+  `${UPSTREAM_RELAY_HOST}/xrpc/com.atproto.sync.listHosts?limit=1000`,
 );
 
 if (!upstream.ok) {
@@ -34,7 +39,7 @@ let curr = cursor;
 
 do {
   const upstream = await fetch(
-    `https://relay1.us-west.bsky.network/xrpc/com.atproto.sync.listHosts?limit=1000&cursor=${curr}`,
+    `${UPSTREAM_RELAY_HOST}/xrpc/com.atproto.sync.listHosts?limit=1000&cursor=${curr}`,
   );
   const { cursor, hosts } = await upstream.json() as ListHostsResponse;
   totalUpstreamHosts.push(...hosts);
@@ -54,7 +59,7 @@ let unsuccessfulAdditions = 0;
 
 for (const host of Array.from(newHosts)) {
   const response = await fetch(
-    `${Deno.env.get("RELAY_HOST")}/admin/pds/requestCrawl`,
+    `${RELAY_HOST}/admin/pds/requestCrawl`,
     {
       method: "POST",
       headers: {
@@ -82,34 +87,36 @@ for (const host of Array.from(newHosts)) {
   console.info(`[INFO]: added ${host} to relay`);
 }
 
-const nextScheduledRun = getDateTimeInFutureHours(24)
+if (!DISCORD_WEBHOOK_TOKEN || typeof DISCORD_WEBHOOK_TOKEN === "undefined") {
+  const nextScheduledRun = getDateTimeInFutureHours(24);
 
-const webhookResponse = await sendWebhookMessage({
-  embeds: [{
-    "title": "New PDS additions",
-    "description": "Summary of discovery github action",
-    timestamp: new Date().toISOString(),
-    "fields": [
-      {
-        "name": "added",
-        "value": `${successfulAdditions} PDSes successfully added`,
-      },
-      {
-        "name": "failures",
-        "value": `${unsuccessfulAdditions} PDSes did not get added`,
-      },
-      {
-        name: "Next scheduled run",
-        value: nextScheduledRun
-      }
-    ],
-  }]
-});
+  const webhookResponse = await sendWebhookMessage({
+    embeds: [{
+      "title": "New PDS additions",
+      "description": "Summary of discovery github action",
+      timestamp: new Date().toISOString(),
+      "fields": [
+        {
+          "name": "added",
+          "value": `${successfulAdditions} PDSes successfully added`,
+        },
+        {
+          "name": "failures",
+          "value": `${unsuccessfulAdditions} PDSes did not get added`,
+        },
+        {
+          name: "Next scheduled run",
+          value: nextScheduledRun,
+        },
+      ],
+    }],
+  });
 
-if (!webhookResponse.ok) {
-  const data = await response.json();
-  console.log({ data });
-  throw new Error(
-    `failed to send message to webhook: ${webhookResponse.status}`,
-  );
+  if (!webhookResponse.ok) {
+    const data = await response.json();
+    console.log({ data });
+    throw new Error(
+      `failed to send message to webhook: ${webhookResponse.status}`,
+    );
+  }
 }
