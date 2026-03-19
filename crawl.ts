@@ -40,7 +40,7 @@ for (const host of disconnectedHosts) {
 
 // summary of this run sent to discord webhook
 
-if (!DISCORD_WEBHOOK_TOKEN || typeof DISCORD_WEBHOOK_TOKEN === "undefined") {
+if (DISCORD_WEBHOOK_TOKEN && typeof DISCORD_WEBHOOK_TOKEN !== "undefined") {
   const nextScheduledRun = getDateTimeInFutureHours(1);
   const response = await sendWebhookMessage({
     embeds: [{

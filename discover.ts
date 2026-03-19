@@ -3,6 +3,7 @@ import type { Host, ListHostsResponse } from "./types.ts";
 import { getDateTimeInFutureHours } from "./future.ts";
 import {
   DISCORD_WEBHOOK_TOKEN,
+  RELAY_ADMIN_PASSWORD,
   RELAY_HOST,
   UPSTREAM_RELAY_HOST,
 } from "./constants.ts";
@@ -65,7 +66,7 @@ for (const host of Array.from(newHosts)) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${
-          btoa("admin:" + Deno.env.get("RELAY_ADMIN_PASSWORD"))
+          btoa("admin:" + RELAY_ADMIN_PASSWORD)
         }`,
       },
       body: JSON.stringify({ hostname: host }),
@@ -87,7 +88,7 @@ for (const host of Array.from(newHosts)) {
   console.info(`[INFO]: added ${host} to relay`);
 }
 
-if (!DISCORD_WEBHOOK_TOKEN || typeof DISCORD_WEBHOOK_TOKEN === "undefined") {
+if (DISCORD_WEBHOOK_TOKEN && typeof DISCORD_WEBHOOK_TOKEN !== "undefined") {
   const nextScheduledRun = getDateTimeInFutureHours(24);
 
   const webhookResponse = await sendWebhookMessage({
