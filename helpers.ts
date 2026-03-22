@@ -1,4 +1,5 @@
 import {
+  DISCORD_WEBHOOK_ID,
   DISCORD_WEBHOOK_TOKEN,
   RELAY_ADMIN_PASSWORD,
   RELAY_HOST,
@@ -44,7 +45,7 @@ export async function requestCrawl(host: string) {
 export async function sendWebhookMessage(message: DiscordWebhookMessage) {
   try {
     const response = await fetch(
-      `https://discord.com/api/webhooks/1479298793735196716/${DISCORD_WEBHOOK_TOKEN}`,
+      `https://discord.com/api/webhooks/${DISCORD_WEBHOOK_ID}/${DISCORD_WEBHOOK_TOKEN}`,
       {
         method: "POST",
         headers: {

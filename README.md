@@ -24,6 +24,8 @@ RELAY_HOST=
 UPSTREAM_RELAY_HOST=
 
 # Optional: if you want to have reports sent to a discord channel after every cron execution
+# See here for how to create a discord webhook: https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+DISCORD_WEBHOOK_ID=
 DISCORD_WEBHOOK_TOKEN=
 ```
 
