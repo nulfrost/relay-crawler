@@ -1,25 +1,25 @@
-name: "Discover new PDSes from upstream"
-on:
-  schedule:
-    - cron: "0 0 * * *"
+# name: "Discover new PDSes from upstream"
+# on:
+#   schedule:
+#     - cron: "0 0 * * *"
 
-env:
-  RELAY_ADMIN_PASSWORD: ${{ secrets.RELAY_ADMIN_PASSWORD }}
-  RELAY_HOST: ${{ secrets.RELAY_HOST }}
-  DISCORD_WEBHOOK_TOKEN: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-  DISCORD_WEBHOOK_ID: ${{ secrets.DISCORD_WEBHOOK_ID }}
+# env:
+#   RELAY_ADMIN_PASSWORD: ${{ secrets.RELAY_ADMIN_PASSWORD }}
+#   RELAY_HOST: ${{ secrets.RELAY_HOST }}
+#   DISCORD_WEBHOOK_TOKEN: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+#   DISCORD_WEBHOOK_ID: ${{ secrets.DISCORD_WEBHOOK_ID }}
 
-permissions:
-  contents: read
+# permissions:
+#   contents: read
 
-jobs:
-  discover:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+# jobs:
+#   discover:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: setup deno
-        uses: denoland/setup-deno@v2
+#       - name: setup deno
+#         uses: denoland/setup-deno@v2
 
-      - name: run crawl
-        run: deno run discover
+#       - name: run crawl
+#         run: deno run discover
